@@ -1,0 +1,227 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h1 style="color: cornflowerblue">
+            <b>Consulta de Usuários do GITHUB</b>
+        </h1>
+    </div>
+</div>
+
+<br>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="form-group">
+            <label for="name"><b>Nome (nick) do Usuário</b></label>
+            <div class="row">
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="name" placeholder="Digite o nome do usuário" [(ngModel)] = "nome"> 
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-block btn-primary" (click) = "consultar()" >Consultar</button>
+                </div>
+            </div>
+        </div>
+      </div>
+</div>
+
+<div class="row" *ngIf="usuario != null">
+    <div class="col-sm-4">
+        <img [src]="usuario.avatar_url" alt="" height="300" width="300">
+     </div>
+
+    <div class="col-sm-8"> 
+        <h2>{{ usuario.name}}</h2>
+        <p><strong>Bio:</strong> {{ usuario.bio }}</p>
+        <p><strong>Url repositório: </strong><a [href] = "usuario.html_url" >{{usuario.html_url}}</a></p>
+        <p>
+            <strong>Localização:</strong> {{ usuario.location }}
+            <strong>Seguidores:</strong> {{ usuario.followers }}
+            <strong>Seguindo:</strong> {{ usuario.following}}
+        </p>
+        <p><strong>Email:</strong> {{ usuario.email }}</p>
+      <div class="row">
+        <div class="col-sm-3"> 
+          <button type="button" class="btn btn-block btn-danger" data-toggle="modal" (click)="showModalSeguidores()" >Ver Seguidores</button>
+        </div>
+        <div class="col-sm-3">  
+          <button type="button" class="btn btn-block btn-danger" data-toggle="modal"  (click) = "showModalSeguindo()" >Ver Seguindo</button>
+
+        </div>
+      </div>
+
+    </div>
+
+</div>
+
+<br>
+<div class="row justify-content-center" *ngIf="usuario != null">
+  <div class="col-md-4">
+    <button type="button" class="btn btn-block btn-warning" (click) = "consultarRepository()" >Consultar Repositório</button>
+</div>
+<div class="col-md-4">
+  <button type="button" class="btn btn-block btn-success" (click) = "consultarRepositoryStarred()" >Consultar Repositório (Starred)</button>
+</div>
+</div>
+<br>
+<div class="row" >
+    <div class="col-sm-6" *ngIf="repositorys != null">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> Lista de Repositórios
+        </div>
+        <div class="card-body">
+          <table class="table" >
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Linguagem</th>
+                <th>Ações</th>
+               
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let repo of repositorys" >
+                <td>{{ repo.name }}</td>
+                <td>{{ repo.description }}</td>
+                <td>{{ repo.language }}</td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-primary" (click) = "goRepository(repo.html_url)" >Ver</button>
+                </td>
+
+              </tr>
+             </tbody>
+          </table>
+         
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-sm-6" *ngIf="repositorysStarred != null">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> Lista de Repositórios (starred)
+        </div>
+        <div class="card-body">
+          <table class="table" >
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Linguagem</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let repo of repositorysStarred" >
+                <td>{{ repo.name }}</td>
+                <td>{{ repo.description }}</td>
+                <td>{{ repo.language }}</td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-primary" (click) = "goRepository(repo.html_url)" >Ver</button>
+                </td>
+              </tr>
+             </tbody>
+          </table>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div bsModal #seguidores="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="seguidoresLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Seguidores</h4>
+          <button type="button" class="close" (click)="seguidores.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="usuario!= null">
+           <div *ngIf="usuario.seguidores != null">
+            <div class="card">
+              
+              <div class="card-body">
+                <table class="table" >
+                  <thead>
+                    <tr>
+                      <th>Foto</th>
+                      <th>Nick</th>
+                      <th>Ações</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let usu of usuario.seguidores" >
+                      <td><img [src]="usu.avatar_url" alt="Avatar" style="border-radius: 50%;" width="50" height="50"></td>
+                      <td>{{ usu.login }}</td>
+                      <td>
+                        <button type="button" class="btn btn-sm btn-primary" (click) = "consultarUsuario(usu.login)" >Ver</button>
+                      </td>
+                     </tr>
+                   </tbody>
+                </table>
+               
+              </div>
+            </div>
+          </div>
+          </div>
+
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="seguidores.hide()">Fechar</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+
+  <div bsModal #seguindo="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="seguindoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Seguindo</h4>
+          <button type="button" class="close" (click)="seguindo.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="usuario!= null">
+           <div *ngIf="usuario.seguindo != null">
+            <div class="card">
+              
+              <div class="card-body">
+                <table class="table" >
+                  <thead>
+                    <tr>
+                      <th>Foto</th>
+                      <th>Nick</th>
+                      <th>Ações</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let usu of usuario.seguindo" >
+                      <td><img [src]="usu.avatar_url" alt="Avatar" style="border-radius: 50%;" width="50" height="50"></td>
+                      <td>{{ usu.login }}</td>
+                      <td>
+                        <button type="button" class="btn btn-sm btn-primary" (click) = "consultarUsuario(usu.login)" >Ver</button>
+                      </td>
+                     </tr>
+                   </tbody>
+                </table>
+               
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="seguindo.hide()">Fechar</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
